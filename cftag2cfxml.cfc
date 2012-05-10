@@ -16,7 +16,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		xml = pre_parse_fixQuotes(xml);
 		xml = pre_parse_cfif(xml);
 		xml = pre_parse_cfreturn(xml);
-		xml = pre_parse_cfbreak(xml)
+		xml = pre_parse_cfbreak(xml);
 		xml = pre_parse_cfset(xml);
 		xml = pre_parse_cfargument(xml);
 		xml = pre_parse_cfwddx(xml);		
