@@ -28,8 +28,8 @@ I am using XML to tokenize the existing tags so that the data is easier to work 
 <li>Profit.</li>
 </ol>
 
-<h3>Problems when Converting existing code</h3>
-<h4>Step 1: create XML</h4>
+<h3>Problems...</h3>
+<h4>...during step 1: creating the XML</h4>
 <ul>
 <li>
 Legacy CF can be difficult to massage into valid XML. There exists some syntax that CF will happily compile, but just shouldn't be. A great example I found was:
@@ -46,7 +46,7 @@ Notice the missing quotes around #myArray#?  CF doesn't care, but the xmlParse f
  in the toCFscript function of cftag2cfscript. If this is a problem try re-organizing the quotes. Alternately you could remove the codee, converting the rest of the file with cftag2cfscript, then paste that offending part back in and rewrite it by hand. 
 </li>
 </ul>
-<h4>Step 2: create cfscript</h4>
+<h4>...during step 2: converting the xml to cfscript</h4>
 <ul>
 <li>
 cftag2cfscript aims to create valid cfscript that WORKS. Sometimes it does this gracefully. Sometimes it does this with ugly hacking. You will want to hand-optimize your converted code and of course regression test it. 
