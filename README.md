@@ -30,6 +30,7 @@ I am using XML to tokenize the existing tags so that the data is easier to work 
 
 <h3>Problems...</h3>
 <h4>...during step 1: creating the XML</h4>
+
 <ul>
 <li>
 Legacy CF can be difficult to massage into valid XML. There exists some syntax that CF will happily compile, but just shouldn't be. A great example I found was:
@@ -46,6 +47,7 @@ Notice the missing quotes around #myArray#?  CF doesn't care, but the xmlParse f
  in the toCFscript function of cftag2cfscript. If this is a problem try re-organizing the quotes. Alternately you could remove the codee, converting the rest of the file with cftag2cfscript, then paste that offending part back in and rewrite it by hand. 
 </li>
 </ul>
+
 <h4>...during step 2: converting the xml to cfscript</h4>
 <ul>
 <li>
@@ -76,7 +78,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfswitch</li>
 <li>cfthrow</li>
 <li>cftry</li>
-<ul>
+</ul>
 
 <h4>Mostly Supported Tags</h4>
 <ul>
@@ -86,18 +88,18 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfloop - cfloop:Query - looking for suggestions on how to make this better.</li>
 <li>cfinvoke - createObject works </li>
 <li>cfwddx</li>
-<ul>
+</ul>
 
 <h4>Barely Supported Tags</h4>
 <ul>
 <li>cffile - leaves a comment </li>
 <li>cfquery - (Q of Q works)</li>
-<ul>
+</ul>
 
 <h4>Not Supported Tags</h4>
 <ul>
 <li>Everything else</li>
-<ul>
+</ul>
 
 
 <h3>Requirements</h3>
