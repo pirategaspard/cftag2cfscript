@@ -44,6 +44,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		
 		switch(key)
 		{        
+			case "cfabort":
+			{
+				s &= parse_cfabort(doc);
+				break;
+			}			
 			case "cfargument":
 			{
 				// ignore
@@ -182,6 +187,12 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	*/
 	
 	/* Cftag transformation functions */
+	function parse_cfabort(doc)
+	{
+		var s = ' abort;'; 
+		return s;
+	}
+	
 	function parse_cfbreak(doc)
 	{
 		var s = ' break;'; 
@@ -238,7 +249,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var s ='';
 		if (structkeyexists(doc.XmlAttributes,'action'))
 		{
-			s &= ' /* TODO: CFFILE - cftag2cfscript */'
+			s &= ' /* TODO: CFFILE - cftag2cfscript */';
 			if (doc.XmlAttributes.action == 'read')
 			{
 				s &=' //fileRead(); ';

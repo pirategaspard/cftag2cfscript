@@ -20,6 +20,7 @@ newStr = cftag2cfscript.toCFscript(str);
 // print it!
 writeOutput(newStr);
 </pre>
+When finished you will most likely want to run the code through a prettifier since it comes out completely unformated. 
 
 I am using XML to tokenize the existing tags so that the data is easier to work with. Internally the conversion from tags to script is a two step process:
 <ol>
