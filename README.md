@@ -1,7 +1,7 @@
 cftag2cfscript
 ==============
 
-<h1>cftag2cfscript - The cftag to cfscript converter for Coldfusion cfcs</h1>
+<h2>The cftag to cfscript converter for Coldfusion cfcs</h2>
 
 With the arrival of Coldfusion 9 we can finally build our cfcs in cfscript. I've found that there is a significant speed increase when converting an existing tag based cfc to cfscript. 
 
