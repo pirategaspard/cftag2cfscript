@@ -22,9 +22,11 @@ writeOutput(newStr);
 </pre>
 
 I am using XML to tokenize the existing tags so that the data is easier to work with. Internally the conversion from tags to script is a two step process:
-Step 1: convert existing tag code into a valid XML document. 
-Step 2: parse the XML into cfscript
-Step 3: Profit. 
+<ol>
+<li>convert existing tag code into a valid XML document.</li>
+<li>parse the XML into cfscript</li>
+<li>Profit.</li>
+</ol>
 
 <h3>Problems when Converting existing code</h3>
 <h4>Step 1: create XML</h4>
