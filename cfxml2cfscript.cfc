@@ -166,7 +166,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			}
 			default:
 			{
-				s &= '/* UNABLE TO PARSE: '&key&' */';
+				s &= '/* UNABLE TO PARSE: '&key&' - cftag2cfscript */';
 			}
 		}
 		return s;
@@ -238,6 +238,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var s ='';
 		if (structkeyexists(doc.XmlAttributes,'action'))
 		{
+			s &= ' /* TODO: CFFILE - cftag2cfscript */'
 			if (doc.XmlAttributes.action == 'read')
 			{
 				s &=' //fileRead(); ';
@@ -247,7 +248,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &=' //fileWrite(); ';
 			}
 			else if (doc.XmlAttributes.action == 'append')
-			{
+			{				
 				s &=' //fileAppend(); ';
 			}
 		}    
@@ -449,7 +450,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			k = getNewVariable(); // array of query keys
 			l = getNewVariable(); // length of keys
 			j = getNewVariable(); // index for keys
-			s &= '/* TODO: PLEASE OPTIMIZE ME ~ cftag2cfscript */';
+			s &= '/* TODO: PLEASE OPTIMIZE ME - cftag2cfscript */';
 			s &= ' var '&q&'='&clean(doc.XmlAttributes.query)&'; /* put Q into temp variable */';
 			s &= ' var '&i&'=0;';
 			s &= ' var '&k&'= listToArray('&q&').columnlist);';
@@ -465,7 +466,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			s &= parseChildren(doc);			
 			s &= '}';
 			s &= ' '&clean(doc.XmlAttributes.query)&'='&q&'; /* put Q back into original variable */'; // set query back to original variable name 
-			//s &= '// UNABLE TO PARSE: CFLOOP QUERY ';
+			//s &= '/* UNABLE TO PARSE: CFLOOP QUERY - cftag2cfscript */';
 		}
 		else if (structkeyexists(doc.XmlAttributes,'condition'))
 		{
