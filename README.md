@@ -26,17 +26,31 @@ Step 1: convert existing tag code into a valid XML document.
 Step 2: parse the XML into cfscript
 Step 3: Profit. 
 
-<h3>Issues</h3>
+<h3>Problems when Converting existing code</h3>
+<h4>Step 1: create XML</h4>
 <ul>
 <li>
 Legacy CF can be difficult to massage into valid XML. There exists some syntax that CF will happily compile, but just shouldn't be. A great example I found was:
 <pre>
  &lt;cfloop array=#myArray# index="i" &gt;
 </pre>
-Notice the missing quotes for #myArray#?  CF doesn't care, but the xmlParse function will. Some editing of existing code will be necessary to allow for valid XML. 
+Notice the missing quotes around #myArray#?  CF doesn't care, but the xmlParse function will. Some editing of existing code will be necessary to allow for valid XML. 
 </li>
 <li>
-cftag2cfscript aims to create valid cfscript that WORKS. Sometimes it does this gracefully. Sometimes it does this with ugly hacking. You will want to hand-optimize your converted code and of course regression test it. Make sure to search your converted code for "UNABLE TO PARSE" and "TODO". cftag2cfscript will insert these comments in problem areas. 
+ The parse can become confused when single and double quotes are mixed within properties and values. It attempts to sort this out on its own, but if a chunk of your old code is missing or you are getting invalid XML errors this could be an issue. To check, uncomment the line:
+ <pre>
+ //writeOutput(xml);
+ </pre>
+ in the toCFscript function of cftag2cfscript. If this is a problem try re-organizing the quotes. Alternately you could remove the codee, converting the rest of the file with cftag2cfscript, then paste that offending part back in and rewrite it by hand. 
+</li>
+</ol>
+<h4>Step 2: create cfscript</h4>
+<ol>
+<li>
+cftag2cfscript aims to create valid cfscript that WORKS. Sometimes it does this gracefully. Sometimes it does this with ugly hacking. You will want to hand-optimize your converted code and of course regression test it. 
+</li>
+<li>
+Make sure to search your converted code for "UNABLE TO PARSE" and "TODO". cftag2cfscript will insert these comments in problem areas. 
 </li>
 </ol>
 
