@@ -40,10 +40,8 @@ Legacy CF can be difficult to massage into valid XML. There exists some syntax t
 Notice the missing quotes around #myArray#?  CF doesn't care, but the xmlParse function will. Some editing of existing code will be necessary to allow for valid XML. 
 </li>
 <li>
- The parse can become confused when single and double quotes are mixed within properties and values. It attempts to sort this out on its own, but if a chunk of your old code is missing or you are getting invalid XML errors this could be an issue. To check, uncomment the line:
- <pre>
- //writeOutput(xml);
- </pre>
+ The parser can become confused when single and double quotes are mixed within properties and values. It attempts to sort this out on its own, but if a chunk of your old code is missing or you are getting invalid XML errors this could be an issue. To check, uncomment the line:
+ <pre> //writeOutput(xml); </pre>
  in the toCFscript function of cftag2cfscript. If this is a problem try re-organizing the quotes. Alternately you could remove the codee, converting the rest of the file with cftag2cfscript, then paste that offending part back in and rewrite it by hand. 
 </li>
 </ul>
