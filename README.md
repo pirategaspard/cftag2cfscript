@@ -56,5 +56,51 @@ Make sure to search your converted code for "UNABLE TO PARSE" and "TODO". cftag2
 </li>
 </ul>
 
+<h3>Known Issues</h3>
+cftag2cfscript is far from complete. You can help this project by contributing code and bug fixes. 
 
+<h4>Fully Supported Tags</h4>
+<ul>
+<li>cfabort</li>
+<li>cfbreak</li>
+<li>cfcase</li>
+<li>cfcatch</li>
+<li>cfcomponent</li>
+<li>cfdefaultcase</li>
+<li>cfelse</li>
+<li>cfelseif</li>
+<li>cfif</li>
+<li>cflock</li>
+<li>cfreturn</li>
+<li>cfset</li>
+<li>cfswitch</li>
+<li>cfthrow</li>
+<li>cftry</li>
+<ul>
+
+<h4>Mostly Supported Tags</h4>
+<ul>
+<li>cfargument</li>
+<li>cffunction</li>
+<li>cflog</li>
+<li>cfloop - cfloop:Query - looking for suggestions on how to make this better.</li>
+<li>cfinvoke - createObject works </li>
+<li>cfwddx</li>
+<ul>
+
+<h4>Barely Supported Tags</h4>
+<ul>
+<li>cffile - leaves a comment </li>
+<li>cfquery - (Q of Q works)</li>
+<ul>
+
+<h4>Not Supported Tags</h4>
+<ul>
+<li>Everything else</li>
+<ul>
+
+
+<h3>Requirements</h3>
+
+cftag2cfscript has been tested with Coldfusion 9.01 and a few CF 7ish cfcs
 
