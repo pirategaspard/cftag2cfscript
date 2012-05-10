@@ -139,6 +139,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cfset(doc);
 				break;
 			}
+			case "cfsetting":
+			{
+				s &= parse_cfsetting(doc);
+				break;
+			}
 			case "cfswitch":
 			{
 				s &= parse_cfswitch(doc);
@@ -531,6 +536,16 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	function parse_cfset(doc)
 	{
 		var s = rtrim(doc.XmlText)&';'; 
+		return s;
+	}
+	
+	function parse_cfsetting(doc)
+	{
+		var s = '';
+		if (structkeyExists(doc.XmlAttributes,'requesttimeout'))
+		{
+			s &= 'createObject( "java", "coldfusion.runtime.RequestMonitor" ).overrideRequestTimeout( javaCast( "long", '&doc.XmlAttributes.requesttimeout&' ) );';
+		}
 		return s;
 	}
 	

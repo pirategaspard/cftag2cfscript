@@ -18,7 +18,7 @@
 		<cfargument name="arg1" type="numeric" required="true" hint="I am argument 1. I am required." />
 		<cfargument name="arg2" type="string" required="true" default="FOO" hint="I am argument 2. I am required. My default is FOO" />
 		<cfargument name="arg3" type="any" required="false" hint="I am argument 3. I am optional" />
-		<!--- cfreturn w/ function call --->
+		<cfsetting requesttimeout="10" >
 		<cfreturn func2(argumentCollection=arguments) >
 	</cffunction>
 	

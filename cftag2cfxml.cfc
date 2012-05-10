@@ -18,10 +18,11 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		xml = pre_parse_cfreturn(xml);
 		xml = pre_parse_cfbreak(xml);
 		xml = pre_parse_cfset(xml);
+		xml = pre_parse_cfsetting(xml);
 		xml = pre_parse_cfargument(xml);
 		xml = pre_parse_cfwddx(xml);		
 		xml = pre_parse_HTMLentities(xml); 
-		//writeOutput(xml);
+		writeOutput(xml);
 		return xml;	
 	}
 		
@@ -95,8 +96,14 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfset(str)
 	{
-		var name = 'cfset';
+		var name = 'cfset '; // leave space in the string: it keeps it from picking up "cfsetting"
 		return pre_parse_singlelineexpression(str,name);
+	}
+	
+	private function pre_parse_cfsetting(str)
+	{
+		str = rereplace(str,'<cfsetting\s*('&variables.regexVar4&')?\s*/*>','<cfsetting \1 />','all');
+		return str;
 	}
 	
 	private function pre_parse_cfwddx(str)
