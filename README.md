@@ -43,16 +43,16 @@ Notice the missing quotes around #myArray#?  CF doesn't care, but the xmlParse f
  </pre>
  in the toCFscript function of cftag2cfscript. If this is a problem try re-organizing the quotes. Alternately you could remove the codee, converting the rest of the file with cftag2cfscript, then paste that offending part back in and rewrite it by hand. 
 </li>
-</ol>
+</ul>
 <h4>Step 2: create cfscript</h4>
-<ol>
+<ul>
 <li>
 cftag2cfscript aims to create valid cfscript that WORKS. Sometimes it does this gracefully. Sometimes it does this with ugly hacking. You will want to hand-optimize your converted code and of course regression test it. 
 </li>
 <li>
 Make sure to search your converted code for "UNABLE TO PARSE" and "TODO". cftag2cfscript will insert these comments in problem areas. 
 </li>
-</ol>
+</ul>
 
 
 
