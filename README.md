@@ -86,6 +86,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cflog</li>
 <li>cfloop - cfloop:Query - looking for suggestions on how to make this better.</li>
 <li>cfinvoke - createObject works </li>
+<li>cfsetting - requesttimeout works </li>
 <li>cfwddx</li>
 </ul>
 
