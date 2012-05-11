@@ -5,6 +5,6 @@ cftag2cfscript = new cftag2cfscript();
 str = fileRead(expandPath('test.cfc'));
 // convert!
 newStr = cftag2cfscript.toCFscript(str);
-// print it!
+// print it! 
 writeOutput(newStr);
 </cfscript>
