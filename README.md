@@ -43,7 +43,7 @@ Notice the missing quotes around #myArray#?  CF doesn't care, but the xmlParse f
 <li>
  The parser can become confused when single and double quotes are mixed within properties and values. It attempts to sort this out on its own, but if a chunk of your old code is missing or you are getting invalid XML errors this could be an issue. To check, uncomment the line:
  <pre> //writeOutput(xml); </pre>
- in the toCFscript function of cftag2cfscript. If this is a problem try re-organizing the quotes. Alternately you could remove the codee, converting the rest of the file with cftag2cfscript, then paste that offending part back in and rewrite it by hand. 
+ in the toCFscript function of cftag2cfscript. If this is a problem try re-organizing the quotes. Alternately you could remove the code, converting the rest of the file with cftag2cfscript, then paste that offending part back in and rewrite it by hand. 
 </li>
 </ul>
 
@@ -56,6 +56,8 @@ cftag2cfscript aims to create valid cfscript that WORKS. Sometimes it does this 
 Make sure to search your converted code for "UNABLE TO PARSE" and "TODO". cftag2cfscript will insert these comments in problem areas. 
 </li>
 </ul>
+
+It may be that a tag in your code is not supported yet by cftag2cfscript and so it may give you XML errors. Check the list below to see what tags are supported. If its not there, or its there but implemented badly, submit a fix!
 
 <h3>Known Issues</h3>
 cftag2cfscript is far from complete. You can help this project by contributing code and bug fixes. 
