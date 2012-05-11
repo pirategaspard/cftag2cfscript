@@ -22,7 +22,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		xml = pre_parse_cfargument(xml);
 		xml = pre_parse_cfwddx(xml);		
 		xml = pre_parse_HTMLentities(xml); 
-		writeOutput(xml);
+		//writeOutput(xml);
 		return xml;	
 	}
 		

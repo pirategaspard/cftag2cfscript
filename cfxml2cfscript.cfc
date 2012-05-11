@@ -134,6 +134,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cfreturn(doc);
 				break;
 			}
+			case "cfscript":
+			{
+				s &= parse_cfscript(doc);
+				break;
+			}
 			case "cfset":
 			{
 				s &= parse_cfset(doc);
@@ -530,6 +535,12 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	function parse_cfreturn(doc)
 	{
 		var s = ' return ' & trim(doc.XmlText)&';';
+		return s;
+	}
+	
+	function parse_cfscript(doc)
+	{
+		var s = ' '&doc.XmlText;
 		return s;
 	}
 	

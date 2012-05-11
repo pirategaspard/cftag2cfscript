@@ -90,6 +90,23 @@
 		<cfreturn str >
 	</cffunction>
 	
+	<cffunction name="DoStuffWithLists" returnType="boolean" output="false">
+		<cfargument name="list1" type="string">
+		<cfargument name="list2" type="string">
+		<cfset var i = 0 />		
+		<cfscript>
+			for (i=1; i LTE ListLen(arguments.List1); i=i+1) 
+			{
+				if (ListFindNoCase(arguments.List2, ListGetAt(arguments.List1, i)))
+				{
+					return i;
+					break;
+				}
+			}
+			return 0;		
+		</cfscript>
+	</cffunction>
+	
 	
 	<!---need more tests -dg--->
 	
