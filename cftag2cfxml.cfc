@@ -20,7 +20,8 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		xml = pre_parse_cfset(xml);
 		xml = pre_parse_cfsetting(xml);
 		xml = pre_parse_cfargument(xml);
-		xml = pre_parse_cfwddx(xml);		
+		xml = pre_parse_cfwddx(xml);	
+		xml = pre_parse_cfscript(xml);	
 		xml = pre_parse_HTMLentities(xml); 
 		//writeOutput(xml);
 		return xml;	
@@ -91,6 +92,12 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	private function pre_parse_cfreturn(str)
 	{
 		str = rereplace(str,'<cfreturn\s*('&variables.regexVar4&')?\s*/*>','<cfreturn>\1</cfreturn>','all');
+		return str;
+	}
+	
+	private function pre_parse_cfscript(str)
+	{
+		str = rereplace(str,'<cfscript>(.*)</cfscript>','<cfscript><![CDATA[\1]]></cfscript>','all');
 		return str;
 	}
 	

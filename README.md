@@ -75,6 +75,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfif</li>
 <li>cflock</li>
 <li>cfreturn</li>
+<li>cfscript</li>
 <li>cfset</li>
 <li>cfswitch</li>
 <li>cfthrow</li>
