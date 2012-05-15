@@ -131,6 +131,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cfloop(doc);        
 				break;
 			}
+			case "cfmail":
+			{
+				s &= parse_cfmail(doc);        
+				break;
+			}
 			case "cfquery":
 			{
 				s &= parse_cfquery(doc);        
@@ -139,6 +144,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			case "cfreturn":
 			{
 				s &= parse_cfreturn(doc);
+				break;
+			}
+			case "cfsavecontent":
+			{
+				s &= parse_cfsavecontent(doc);
 				break;
 			}
 			case "cfscript":
@@ -255,7 +265,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			}
 			case 'list':
 			{
-				s &= ' directoryList("'&doc.XmlAttributes.directory&'");';
+				s &= ' '&doc.XmlAttributes.name&' = directoryList("'&doc.XmlAttributes.directory&'");';
 				break;
 			}
 			case 'rename':
@@ -295,19 +305,42 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var s ='';
 		if (structkeyexists(doc.XmlAttributes,'action'))
 		{
-			s &= ' /* TODO: CFFILE - cftag2cfscript */';
+			s &= ' /* TODO: CFFILE cleanup - cftag2cfscript */';
+			// action
 			if (doc.XmlAttributes.action == 'read')
 			{
-				s &=' //fileRead(); ';
+				s &=' fileRead(';
 			}
 			else if (doc.XmlAttributes.action == 'write')
 			{
-				s &=' //fileWrite(); ';
+				s &=' fileWrite(';
 			}
 			else if (doc.XmlAttributes.action == 'append')
 			{				
-				s &=' //fileAppend(); ';
+				s &=' fileAppend(';
 			}
+			else if (doc.XmlAttributes.action == 'copy')
+			{				
+				s &=' fileCopy(';
+			}
+			// arguments
+			if (structkeyexists(doc.XmlAttributes,'file'))
+			{
+				s &= 'file="'&doc.XmlAttributes.file&'",';
+			}
+			if (structkeyexists(doc.XmlAttributes,'output'))
+			{
+				s &= 'output="'&doc.XmlAttributes.file&'",';
+			}
+			if (structkeyexists(doc.XmlAttributes,'source'))
+			{
+				s &= 'source="'&doc.XmlAttributes.source&'",';
+			}
+			if (structkeyexists(doc.XmlAttributes,'destination'))
+			{
+				s &= 'destination="'&doc.XmlAttributes.destination&'",';
+			}
+			s &= ');';
 		}    
 		return s;
 	}
@@ -549,6 +582,27 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		return s;
 	}
 	
+	function parse_cfmail(doc)
+	{
+		var m = getNewVariable(); // mail service
+		var s =' /* TODO: CFMAIL - cftag2cfscript */';
+		s =' var '&m&' = new mail();';
+		if (structkeyExists(doc.XmlAttributes,'subject'))
+		{
+			s &= ' '&m&'.setSubject("'&doc.XmlAttributes.subject&'");';
+		}
+		if (structkeyExists(doc.XmlAttributes,'from'))
+		{
+			s &= ' '&m&'.setFrom("'&doc.XmlAttributes.from&'");';
+		}
+		if (structkeyExists(doc.XmlAttributes,'to'))
+		{
+			s &= ' '&m&'.setTo("'&doc.XmlAttributes.to&'");';
+		}
+		s &= ' '&m&'.addPart( type="html", charset="utf-8", body="'&doc.XmlText&'" ); /* The body content is probably incorrect - cftag2cfscript */';
+		return s;
+	}
+	
 	// TODO: make this more betterer
 	function parse_cfquery(doc)
 	{
@@ -569,6 +623,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			}
 		}
 		// should loop here to build cfqueryparam data
+		
 		sql = doc.xmlText;	
 		s &= q&'.setSQL("'&sql&'");'; 
 		s &= doc.XmlAttributes.name&'='&q&'.Execute().getResult();'; 
@@ -578,6 +633,13 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	function parse_cfreturn(doc)
 	{
 		var s = ' return ' & trim(doc.XmlText)&';';
+		return s;
+	}
+	
+	function parse_cfsavecontent(doc)
+	{
+		var s= ' /* TODO: CFSAVECONTENT - cftag2cfscript */ ';
+		s &=' savecontent variable="'&doc.XmlAttributes.variable&'" {'&doc.XmlText&'}';
 		return s;
 	}
 	

@@ -20,7 +20,9 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		xml = pre_parse_cfbreak(xml);
 		xml = pre_parse_cfset(xml);
 		xml = pre_parse_cflog(xml);
+		xml = pre_parse_cffile(xml);
 		xml = pre_parse_cfdirectory(xml);
+		xml = pre_parse_cfsavecontents(xml);
 		xml = pre_parse_cfsetting(xml);
 		xml = pre_parse_cfargument(xml);
 		xml = pre_parse_cfwddx(xml);	
@@ -34,32 +36,30 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	/* PART I: Pre-Parseing Functions for turning cftags into properly formed XML */ 
 	private function pre_parse_cfargument(str)
 	{
-		return pre_parse_closeTag(str,'cfargument');
+		return pre_parse_CloseTagShort(str,'cfargument');
 	}
 	
 	private function pre_parse_cflog(str)
 	{
-		return pre_parse_closeTag(str,'cflog');
+		return pre_parse_CloseTagShort(str,'cflog');
+	}
+	
+	private function pre_parse_cffile(str)
+	{
+		return pre_parse_CloseTagShort(str,'cffile');
 	}
 	
 	private function pre_parse_cfdirectory(str)
 	{
-		str = rereplace(str,'<cfdirectory(.*?)>','<cfdirectory \1 />','all');
-		return str;
-		//return pre_parse_closeTag(str,'cfdirectory');
-	}
+		//str = rereplace(str,'<cfdirectory(.*?)>','<cfdirectory \1 />','all');
+		return pre_parse_CloseTagShort(str,'cfdirectory');
+	}	
 	
 	private function pre_parse_cfbreak(str)
 	{
-		str = rereplace(str,'<cfbreak /*?>','<cfbreak />','all');
-		return str;
-	}
-	
-	private function pre_parse_closeTag(str,name)
-	{
-		str = rereplace(str,'<'&name&'\s*?('&variables.regexVar4&')?\s*?/*?>','<'&name&' \1 />','all');
-		return str;
-	}
+		//str = rereplace(str,'<cfbreak /*?>','<cfbreak />','all');
+		return pre_parse_CloseTagShort(str,'cfbreak');
+	}	
 	
 	private function pre_parse_HTMLentities(str)
 	{
@@ -73,6 +73,12 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	{
 		//str = rereplace(str,'<!--.*?-->','','all'); // remove all comments
 		str = rereplace(str,'<!--(.*?)-->','<comment><![CDATA[\1]]></comment>','all'); // put all comments into a commment tag
+		return str;
+	}
+	
+	private function pre_parse_cfsavecontents(str)
+	{
+		str = rereplace(str,'<cfsavecontent(.*?)>(.*?)</cfsavecontent>','<cfsavecontent \1 ><![CDATA[\2]]></cfsavecontent>','all'); // put all comments into a commment tag
 		return str;
 	}
 	
@@ -111,8 +117,8 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfreturn(str)
 	{
-		str = rereplace(str,'<cfreturn\s*?('&variables.regexVar4&')?\s*?/*?>','<cfreturn>\1</cfreturn>','all');
-		return str;
+		//return rereplace(str,'<cfreturn\s*?('&variables.regexVar4&')?\s*?/*?>','<cfreturn>\1</cfreturn>','all');
+		return pre_parse_CloseTagFull(str,'cfreturn');
 	}
 	
 	private function pre_parse_cfscript(str)
@@ -123,20 +129,33 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfset(str)
 	{
-		var name = 'cfset '; // leave space in the string: it keeps it from picking up "cfsetting"
-		return pre_parse_singlelineexpression(str,name);
+		//var name = 'cfset '; // leave space in the string: it keeps it from picking up "cfsetting"
+		//return pre_parse_singlelineexpression(str,name);
+		return pre_parse_CloseTagFull(str,'cfset');
 	}
 	
 	private function pre_parse_cfsetting(str)
 	{
 		//str = rereplace(str,'<cfsetting\s*?('&variables.regexVar4&')?\s*?/*?>','<cfsetting \1 />','all');
-		return pre_parse_closeTag(str,'cfsetting');
+		return pre_parse_CloseTagShort(str,'cfsetting');		
 	}
 	
 	private function pre_parse_cfwddx(str)
 	{
 		//str = rereplace(str,'<cfwddx\s*?('&variables.regexVar4&')?\s*?/*?>','<cfwddx \1 />','all');
-		return pre_parse_closeTag(str,'cfwddx');
+		return pre_parse_CloseTagShort(str,'cfwddx');
+	}
+	
+	private function pre_parse_CloseTagShort(str,name)
+	{
+		str = rereplace(str,'<'&name&'(.*?)/*?>','<'&name&'\1 />','all');
+		return str;
+	}
+	
+	private function pre_parse_CloseTagFull(str,name)
+	{
+		str = rereplace(str,'<'&name&'(.*?)/*?>','<'&name&'> \1 </'&name&'>','all');
+		return str;
 	}
 	
 	private function pre_parse_singlelineexpression(str,name)
