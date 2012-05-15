@@ -565,7 +565,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			s &= q&'.setDBtype("'&doc.XmlAttributes.dbtype&'");'; 
 			if (doc.XmlAttributes.dbtype == 'query')
 			{
-				s &= q&'.setAttribute("'&doc.XmlAttributes.name&'='&doc.XmlAttributes.name&'");'; 
+				s &= q&'.setAttribute('&doc.XmlAttributes.name&'='&doc.XmlAttributes.name&');'; 
 			}
 		}
 		// should loop here to build cfqueryparam data
