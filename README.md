@@ -70,6 +70,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfcatch</li>
 <li>cfcomponent</li>
 <li>cfdefaultcase</li>
+<li>cfdirectory</li>
 <li>cfelse</li>
 <li>cfelseif</li>
 <li>cfif</li>

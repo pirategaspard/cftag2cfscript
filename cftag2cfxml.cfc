@@ -1,3 +1,4 @@
+/* cftag2cfscript - Daniel Gaspar dan@danielgaspar.com */
 component displayname="cftag2cfxml" hint="PART I" output="false"
 {
 
@@ -5,7 +6,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	variables.regexVar1 = '[\w\d._[\]{}\(\)\*\##"'',&]+'; //for cf variables/cfexpressions inside double quotes
 	variables.regexVar2 = '[\w\d\._\[\]{}\(\)\"\*\##'',&]+'; // a more permissive regex for cf variables/cfexpressions
 	variables.regexVar3 = '[\w\d\._\[\]{}=\s\(\)\*\##'',&]+'; //an even more permissive regex for cf variables/cfexpressions
-	variables.regexVar4 = '[\w\d\._\[\]{}=\s\(\)\*\##\"'',\-&]+'; //an much permissive regex for cf variables/cfexpressions
+	variables.regexVar4 = '[\w\d\._\[\]{}=\s\(\)\*\##\":'',\-&]+'; //an much permissive regex for cf variables/cfexpressions
 	//variables.regexVar5 = '[\w\d\._\[\]{}=\s\(\)\*\##\"'',\<\>\-/&]+'; //an even much more permissive regex for cf variables/cfexpressions
 
 	
@@ -18,6 +19,8 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		xml = pre_parse_cfreturn(xml);
 		xml = pre_parse_cfbreak(xml);
 		xml = pre_parse_cfset(xml);
+		xml = pre_parse_cflog(xml);
+		xml = pre_parse_cfdirectory(xml);
 		xml = pre_parse_cfsetting(xml);
 		xml = pre_parse_cfargument(xml);
 		xml = pre_parse_cfwddx(xml);	
@@ -31,13 +34,30 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	/* PART I: Pre-Parseing Functions for turning cftags into properly formed XML */ 
 	private function pre_parse_cfargument(str)
 	{
-		str = rereplace(str,'<cfargument\s*('&variables.regexVar4&')?\s*/*>','<cfargument \1 />','all');
+		return pre_parse_closeTag(str,'cfargument');
+	}
+	
+	private function pre_parse_cflog(str)
+	{
+		return pre_parse_closeTag(str,'cflog');
+	}
+	
+	private function pre_parse_cfdirectory(str)
+	{
+		str = rereplace(str,'<cfdirectory(.*?)>','<cfdirectory \1 />','all');
 		return str;
+		//return pre_parse_closeTag(str,'cfdirectory');
 	}
 	
 	private function pre_parse_cfbreak(str)
 	{
-		str = rereplace(str,'<cfbreak /*>','<cfbreak />','all');
+		str = rereplace(str,'<cfbreak /*?>','<cfbreak />','all');
+		return str;
+	}
+	
+	private function pre_parse_closeTag(str,name)
+	{
+		str = rereplace(str,'<'&name&'\s*?('&variables.regexVar4&')?\s*?/*?>','<'&name&' \1 />','all');
 		return str;
 	}
 	
@@ -82,8 +102,8 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfif(str)
 	{
-		str = rereplace(str,'<cfif\s*('&variables.regexVar4&')\s*>','<cfif><condition>\1</condition>','all');
-		str = rereplace(str,'<cfelseif\s*('&variables.regexVar4&')\s*>','<cfelseif><condition>\1</condition>','all');
+		str = rereplace(str,'<cfif\s*?('&variables.regexVar4&')\s*?>','<cfif><condition>\1</condition>','all');
+		str = rereplace(str,'<cfelseif\s*?('&variables.regexVar4&')\s*?>','<cfelseif><condition>\1</condition>','all');
 		str = pre_parse_cfelse(str);
 		str = pre_parse_cfelseif(str);
 		return str;
@@ -91,13 +111,13 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfreturn(str)
 	{
-		str = rereplace(str,'<cfreturn\s*('&variables.regexVar4&')?\s*/*>','<cfreturn>\1</cfreturn>','all');
+		str = rereplace(str,'<cfreturn\s*?('&variables.regexVar4&')?\s*?/*?>','<cfreturn>\1</cfreturn>','all');
 		return str;
 	}
 	
 	private function pre_parse_cfscript(str)
 	{
-		str = rereplace(str,'<cfscript>(.*)</cfscript>','<cfscript><![CDATA[\1]]></cfscript>','all');
+		str = rereplace(str,'<cfscript>(.*?)</cfscript>','<cfscript><![CDATA[\1]]></cfscript>','all');
 		return str;
 	}
 	
@@ -109,14 +129,14 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfsetting(str)
 	{
-		str = rereplace(str,'<cfsetting\s*('&variables.regexVar4&')?\s*/*>','<cfsetting \1 />','all');
-		return str;
+		//str = rereplace(str,'<cfsetting\s*?('&variables.regexVar4&')?\s*?/*?>','<cfsetting \1 />','all');
+		return pre_parse_closeTag(str,'cfsetting');
 	}
 	
 	private function pre_parse_cfwddx(str)
 	{
-		str = rereplace(str,'<cfwddx\s*('&variables.regexVar4&')?\s*/*>','<cfwddx \1 />','all');
-		return str;
+		//str = rereplace(str,'<cfwddx\s*?('&variables.regexVar4&')?\s*?/*?>','<cfwddx \1 />','all');
+		return pre_parse_closeTag(str,'cfwddx');
 	}
 	
 	private function pre_parse_singlelineexpression(str,name)
@@ -124,19 +144,22 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		var i = 0;
 		var pos = '';
 		var posinfo = REFindAllNoCase('<'&name,str,0);
+		var tname = trim(lcase(name));
 		for (i=arrayLen(posinfo.pos);i>0;i--)
 		{
 			pos = findEndOfTag(str,posinfo.pos[i]);
-			str = createEndTag(str,name,findEndOfTag(str,posinfo.pos[i]));        
+			str = createEndTag(str,tname,findEndOfTag(str,posinfo.pos[i]));
 			// remove preexisting '>'
 			str = RemoveChars(str,pos,1);
 			// remove the '/' from the pre-existing '/>'
 			if (mid(str,pos-1,1) == '/')
 			{
 				str = RemoveChars(str,pos-1,1);
-			}                
+			}			
 			// close start tag
-			str = insert('> ',str,posinfo.pos[i]+len('<'&name)-1);
+			//str = insert('> ',str,posinfo.pos[i]+len('<'&tname)-1);
+			str = RemoveChars(str,posinfo.pos[i]+1,len(tname));
+			str = insert(tname&'> ',str,posinfo.pos[i]);
 		}
 		return str;
 	}
@@ -146,9 +169,9 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		var i = '';
 		var posinfo = '';
 		var substr = '';
-		str = rereplace(str,'('&variables.regexVar2&')\s*=\s*''('&variables.regexVar1&')''','\1="\2"','all');
+		str = rereplace(str,'('&variables.regexVar2&')\s*?=\s*?''('&variables.regexVar1&')''','\1="\2"','all');
 		//writeOutput(str&'<br />');
-		posinfo = REFindAllNoCase('=\s*"'&variables.regexVar1&'"(\s|/|>)',str,0);
+		posinfo = REFindAllNoCase('=\s*?"'&variables.regexVar1&'"(\s|/|>)',str,0);
 		//writeDump(posinfo);
 		for (i=arrayLen(posinfo.pos);i>0;i--)
 		{
@@ -200,7 +223,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	private function createEndTag(str,name,i)
 	{
 		// insert closing tag
-		str = insert('</'&name&'>',str,i);
+		str = insert('</'&trim(lcase(name))&'>',str,i);
 		return str;
 	}
 	

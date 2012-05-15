@@ -1,3 +1,4 @@
+/* cftag2cfscript - Daniel Gaspar dan@danielgaspar.com */
 component displayname="cftag2cfscript" hint="I turn cftag cfcs into cfscipt cfcs" output="false"
 {
 	public function init()

@@ -1,4 +1,5 @@
 <cfscript>
+/* cftag2cfscript - Daniel Gaspar dan@danielgaspar.com */
 // create the cftag2cfscript object
 cftag2cfscript = new cftag2cfscript();
 // load the string to be converted

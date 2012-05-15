@@ -1,3 +1,4 @@
+/* cftag2cfscript - Daniel Gaspar dan@danielgaspar.com */
 component displayname="cftag2cfxml" hint="PART 2" output="false"
 {
 
@@ -9,6 +10,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var i=0;
 		var s = '';
 		var aKeys = [] ;
+		//writeOutput(xml);
 		var document = xmlParse(xml);
 		//writeDump(document);
 		aKeys = structkeyArray(document);
@@ -77,6 +79,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			case "cfdefaultcase":
 			{
 				// ignore
+				break;
+			}
+			case "cfdirectory":
+			{
+				s &= parse_cfdirectory(doc);
 				break;
 			}
 			case "cfelse":
@@ -231,6 +238,35 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		return s;
 	}
 	
+	function parse_cfdirectory(doc)
+	{
+		var s ='';
+		switch(doc.XmlAttributes.action)
+		{
+			case 'create':
+			{
+				s &= ' directoryCreate("'&doc.XmlAttributes.directory&'");';
+				break;
+			}
+			case 'delete':
+			{
+				s &= ' directoryDelete("'&doc.XmlAttributes.directory&'");';
+				break;
+			}
+			case 'list':
+			{
+				s &= ' directoryList("'&doc.XmlAttributes.directory&'");';
+				break;
+			}
+			case 'rename':
+			{
+				s &= ' directoryRename("'&doc.XmlAttributes.directory&'");';
+				break;
+			}
+		}
+		return s;
+	}
+	
 	function parse_cfelse(doc)
 	{
 		var s ='';
@@ -278,10 +314,14 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	
 	function parse_cffunction(doc)
 	{
-		var s ='';
+		var s =' ';
 		if (structkeyexists(doc.XmlAttributes,'access'))
 		{
 			s &= doc.XmlAttributes.access;
+		}
+		if (structkeyexists(doc.XmlAttributes,'returntype'))
+		{
+			s &= ' '&doc.XmlAttributes.returntype;
 		}
 		s &= ' function '&doc.XmlAttributes.name&'(';
 		try
@@ -294,12 +334,15 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		}
 		for(i=1;i<=arrayLen(args);i++)
 		{
-			s &= args[i].XmlAttributes.name;
+			if (structkeyexists(args[i].XmlAttributes,'required') && args[i].XmlAttributes.required)
+			{
+				s &= args[i].XmlAttributes.name;
+			}
 			if (structkeyexists(args[i].XmlAttributes,'default'))
 			{
 				 s &= '="'&args[i].XmlAttributes.default&'"';
 			}
-			if (i<arrayLen(args))
+			if (i < arrayLen(args))
 			{
 				s &=',';
 			}
