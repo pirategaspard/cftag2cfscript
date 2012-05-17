@@ -1,5 +1,5 @@
-<!--- cftag2cfscript - Daniel Gaspar dan@danielgaspar.com --->
 <cfcomponent displayname="testcfc" output="false" extends="some.other.cfc" hint="I am the test cfc for cftag2cfscript" >
+	<!--- cftag2cfscript - Daniel Gaspar dan@danielgaspar.com --->
 
 	<!--- Here is a comment  --->
 
@@ -106,6 +106,8 @@
 			}
 			return 0;		
 		</cfscript>
+		<!--- cfzip --->
+		<cfzip action="zip" source="#myFile#" filter="*.BLAH" overwrite="true" file="MyZip.zip" />
 	</cffunction>
 	
 	

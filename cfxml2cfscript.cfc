@@ -41,8 +41,6 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var s = '';
 		var args = [];
 		var i = 1;
-		//writeDump(key);
-		//writeDump(doc);
 		
 		switch(key)
 		{        
@@ -186,6 +184,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cfwddx(doc);
 				break;
 			}
+			case "cfzip":
+			{
+				s &= parse_cfzip(doc);
+				break;
+			}
 			case "comment":
 			{
 				s &= parse_comment(doc);
@@ -305,11 +308,10 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var s ='';
 		if (structkeyexists(doc.XmlAttributes,'action'))
 		{
-			s &= ' /* TODO: CFFILE cleanup - cftag2cfscript */';
 			// action
 			if (doc.XmlAttributes.action == 'read')
 			{
-				s &=' fileRead(';
+				s &=' '&doc.XmlAttributes.variable&' = fileRead(';
 			}
 			else if (doc.XmlAttributes.action == 'write')
 			{
@@ -323,23 +325,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			{				
 				s &=' fileCopy(';
 			}
-			// arguments
-			if (structkeyexists(doc.XmlAttributes,'file'))
-			{
-				s &= 'file="'&doc.XmlAttributes.file&'",';
-			}
-			if (structkeyexists(doc.XmlAttributes,'output'))
-			{
-				s &= 'output="'&doc.XmlAttributes.file&'",';
-			}
-			if (structkeyexists(doc.XmlAttributes,'source'))
-			{
-				s &= 'source="'&doc.XmlAttributes.source&'",';
-			}
-			if (structkeyexists(doc.XmlAttributes,'destination'))
-			{
-				s &= 'destination="'&doc.XmlAttributes.destination&'",';
-			}
+			s &= buildAttributes(doc);
 			s &= ');';
 		}    
 		return s;
@@ -470,28 +456,9 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	
 	function parse_cflog(doc)
 	{
-		var s ='';
-		if (structkeyexists(doc.XmlAttributes,'text'))
-			{
-		s &=' writeLog(text="'&doc.XmlAttributes.text&'"';
-		if (structkeyexists(doc.XmlAttributes,'type'))
-		   {
-		s &=',type="'&doc.XmlAttributes.type&'"';
-		}
-		if (structkeyexists(doc.XmlAttributes,'application'))
-		   {
-		s &=',application="'&doc.XmlAttributes.text&'"';
-		}
-		if (structkeyexists(doc.XmlAttributes,'file'))
-		   {
-		s &=',file="'&doc.XmlAttributes.text&'"';
-		}
-		if (structkeyexists(doc.XmlAttributes,'log'))
-		   {
-		s &=',log="'&doc.XmlAttributes.text&'"';
-		}
+		var s =' writeLog(';
+		s &= buildAttributes(doc);
 		s &=');';
-		}
 		return s;
 	}
 	
@@ -738,15 +705,19 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	
 	function parse_cfwddx(doc)
 	{
-		var s = '';
-		if (structkeyexists(doc.XmlAttributes,'action'))
-		{
-			s &= ' wddx(';
-			s &=' action="'&doc.XmlAttributes.action&'",';
-			s &=' input="'&doc.XmlAttributes.input&'",';
-			s &=' output="'&doc.XmlAttributes.output&'"';
-			s &= ');';
-		}	 
+		var s = ' wddx(';
+		s &= buildAttributes(doc);
+		s &= ');';	 
+		return s;
+	}
+	
+	function parse_cfzip(doc)
+	{
+		var keys = structKeyArray(doc.xmlAttributes);
+		var i = 1;
+		var s =' zip(';		
+		s &= buildAttributes(doc);
+		s &= ');';
 		return s;
 	}
 	
@@ -781,5 +752,22 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			variables.variableCount = 1;
 		}	
 		return listGetAt(varNameList,variables.variableCount);
+	}
+	
+	// builds a comma seperated string from xmlattributes
+	function buildAttributes(doc)
+	{
+		var keys = structKeyArray(doc.xmlAttributes);
+		var i = 1;
+		var s ='';
+		for(i=1;i<=arraylen(keys);i++)
+		{
+			if (i > 1)
+			{
+				s &= ',';
+			}
+			s &= keys[i]&'="'&doc.xmlAttributes[keys[i]]&'"';
+		}
+		return s;
 	}
 }

@@ -75,29 +75,30 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfelseif</li>
 <li>cfif</li>
 <li>cflock</li>
+<li>cflog</li>
 <li>cfreturn</li>
 <li>cfscript</li>
 <li>cfset</li>
 <li>cfswitch</li>
 <li>cfthrow</li>
 <li>cftry</li>
+<li>cfwddx</li>
+<li>cfzip</li>
 </ul>
 
 <h4>Mostly Supported Tags</h4>
 <ul>
 <li>cfargument</li>
+<li>cffile</li>
 <li>cffunction</li>
-<li>cflog</li>
 <li>cfloop - cfloop:Query - looking for suggestions on how to make this better.</li>
 <li>cfinvoke - createObject works </li>
 <li>cfsetting - requesttimeout works </li>
-<li>cfwddx</li>
 </ul>
 
 <h4>Barely Supported Tags</h4>
 <ul>
-<li>cffile - leaves a comment </li>
-<li>cfquery - (Q of Q works)</li>
+<li>cfquery - cfquerparams do not work</li>
 </ul>
 
 <h4>Not Supported Tags</h4>

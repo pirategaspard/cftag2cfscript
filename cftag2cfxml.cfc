@@ -148,7 +148,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_CloseTagShort(str,name)
 	{
-		str = rereplace(str,'<'&name&'(.*?)/*?>','<'&name&'\1 />','all');
+		str = rereplace(str,'<'&name&'(.*?)/*>','<'&name&'\1 />','all');
 		return str;
 	}
 	
