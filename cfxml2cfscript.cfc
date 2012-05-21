@@ -29,12 +29,6 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		return s;
 	}
 	
-	// removes num-sign from begining and end of CF variables.
-	function clean(v)
-	{
-		return rereplace(v,'^##|##$','','all');
-	}
-	
 	// here's the big list of cftags that need to be transformed from xml into cfscript
 	function parseKey(key,doc)
 	{
@@ -201,9 +195,29 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			}
 			default:
 			{
-				s &= '/* UNABLE TO PARSE: '&key&' - cftag2cfscript */';
+				s &= '/* UNABLE TO PARSE: '&key&' - cftag2cfscript */';	
+				s &= parse_default(key,doc);			
 			}
 		}
+		return s;
+	}
+	
+	
+	
+	function parse_default(key,doc)
+	{
+		var keys = structKeyArray(doc.xmlAttributes);
+		var i = 1;
+		var s =' '&key;
+		if (arraylen(keys))
+		{
+			s =' (';
+			s &= buildAttributes(doc);
+			s &= ')';
+		}
+		s &= '{';
+		s &= parseChildren(doc);
+		s &= '}';
 		return s;
 	}
 	
@@ -214,8 +228,8 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var s ='';
 		return s;
 	}
-	*/
 	
+	*/
 	/* Cftag transformation functions */
 	function parse_cfabort(doc)
 	{
@@ -638,7 +652,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var cases = [];
 		if (structkeyexists(doc.XmlAttributes,'expression'))
 		{
-			s &= ' switch ('&doc.XmlAttributes.expression&')';
+			s &= ' switch ('&clean(doc.XmlAttributes.expression)&')';
 			s &= '{';
 			try
 			{
@@ -650,7 +664,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			}
 			for(i=1;i<=arrayLen(cases);i++)
 			{
-				s &= ' case "'&cases[i].XmlAttributes.value&'":';
+				s &= ' case "'&clean(cases[i].XmlAttributes.value)&'":';
 				s &= '{';
 				s &= parseChildren(cases[i]);
 				s &= 'break;';
@@ -713,7 +727,6 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	
 	function parse_cfzip(doc)
 	{
-		var keys = structKeyArray(doc.xmlAttributes);
 		var i = 1;
 		var s =' zip(';		
 		s &= buildAttributes(doc);
@@ -740,6 +753,12 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		}
 		s &= '/*'&comment&'*/'&chr(13);
 		return s;
+	}
+	
+	// removes num-sign from begining and end of CF variables.
+	function clean(v)
+	{
+		return rereplace(v,'^##|##$','','all');
 	}
 	
 	// returns a new name so we can create variables in the code 

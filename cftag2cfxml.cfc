@@ -108,8 +108,8 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfif(str)
 	{
-		str = rereplace(str,'<cfif\s*?('&variables.regexVar4&')\s*?>','<cfif><condition>\1</condition>','all');
-		str = rereplace(str,'<cfelseif\s*?('&variables.regexVar4&')\s*?>','<cfelseif><condition>\1</condition>','all');
+		str = rereplace(str,'<cfif\s*?('&variables.regexVar4&')\s*?>','<cfif><condition><![CDATA[\1]]></condition>','all');
+		str = rereplace(str,'<cfelseif\s*?('&variables.regexVar4&')\s*?>','<cfelseif><condition><![CDATA[\1]]></condition>','all');
 		str = pre_parse_cfelse(str);
 		str = pre_parse_cfelseif(str);
 		return str;
@@ -117,7 +117,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_cfreturn(str)
 	{
-		//return rereplace(str,'<cfreturn\s*?('&variables.regexVar4&')?\s*?/*?>','<cfreturn>\1</cfreturn>','all');
+		//return rereplace(str,'<cfreturn\s*?('&variables.regexVar4&')?\s*?/*?>','<cfreturn><![CDATA[\1]]></cfreturn>','all');
 		return pre_parse_CloseTagFull(str,'cfreturn');
 	}
 	
@@ -154,7 +154,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 	
 	private function pre_parse_CloseTagFull(str,name)
 	{
-		str = rereplace(str,'<'&name&'(.*?)/*?>','<'&name&'> \1 </'&name&'>','all');
+		str = rereplace(str,'<'&name&'(.*?)/*?>','<'&name&'><![CDATA[\1]]></'&name&'>','all');
 		return str;
 	}
 	
