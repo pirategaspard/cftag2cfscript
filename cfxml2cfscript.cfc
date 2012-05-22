@@ -113,6 +113,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cfif(doc);
 				break;
 			}
+			case "cfimage":
+			{
+				s &= parse_cfimage(doc);
+				break;
+			}
 			case "cfinvoke":
 			{
 				s &= parse_cfinvoke(doc);        
@@ -403,7 +408,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			{				
 				s &=' fileCopy(';
 			}
-			s &= buildAttributes(doc);
+			s &= buildAttributes(doc,'action');
 			s &= ');';
 		}    
 		return s;
@@ -472,6 +477,54 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		s &= ')'&'{';
 		s &= parseChildren(doc);
 		s &= '}';
+		return s;
+	}
+	
+	function parse_cfimage(doc)
+	{
+		var s ='';	
+		if (structkeyexists(doc.XmlAttributes,'action'))
+		{
+			// action
+			if (doc.XmlAttributes.action == 'border')
+			{
+				s &=' '&doc.XmlAttributes.variable&' = imageAddBorder(';
+			}
+			else if (doc.XmlAttributes.action == 'captcha')
+			{
+				s &=' imageCaptcha(';
+			}
+			else if (doc.XmlAttributes.action == 'convert')
+			{				
+				s &=' imageConvert(';
+			}
+			else if (doc.XmlAttributes.action == 'info')
+			{				
+				s &=' '&doc.XmlAttributes.structName&' = imageInfo(';
+			}
+			else if (doc.XmlAttributes.action == 'read')
+			{				
+				s &=' '&doc.XmlAttributes.name&' = imageRead(';
+			}
+			else if (doc.XmlAttributes.action == 'resize')
+			{				
+				s &=' imageResize(';
+			}
+			else if (doc.XmlAttributes.action == 'rotate')
+			{				
+				s &=' imageRotate(';
+			}
+			else if (doc.XmlAttributes.action == 'write')
+			{				
+				s &=' imageWrite(';
+			}
+			else if (doc.XmlAttributes.action == 'writeToBrowser')
+			{				
+				s &=' fileCopy(';
+			}
+			s &= buildAttributes(doc,'action');
+			s &= ');';
+		}    	
 		return s;
 	}
 	
@@ -774,7 +827,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		for(i=1;i<=arrayLen(keys);i++)
 		{
 			s &= keys[i]&'="'&doc.XmlAttributes[keys[i]]&'" '; 
-			if (i<arrayLen(keys))
+			if (i <= arrayLen(keys))
 			{
 				s &= ','; 
 			}
@@ -848,18 +901,21 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	}
 	
 	// builds a comma seperated string from xmlattributes
-	function buildAttributes(doc)
+	function buildAttributes(doc,ignoreList='')
 	{
 		var keys = structKeyArray(doc.xmlAttributes);
 		var i = 1;
 		var s ='';
 		for(i=1;i<=arraylen(keys);i++)
 		{
-			if (i > 1)
+			if (!listFindNoCase(ignoreList,keys[i]))
 			{
-				s &= ',';
+				if ((i > 1) && len(s) > 0)
+				{
+					s &= ',';
+				}
+				s &= keys[i]&'="'&doc.xmlAttributes[keys[i]]&'"';
 			}
-			s &= keys[i]&'="'&doc.xmlAttributes[keys[i]]&'"';
 		}
 		return s;
 	}

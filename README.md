@@ -93,6 +93,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfargument</li>
 <li>cffile</li>
 <li>cffunction</li>
+<li>cfimage</li>
 <li>cfloop - cfloop:Query - looking for suggestions on how to make this better.</li>
 <li>cfinvoke - createObject works </li>
 <li>cfsetting - requesttimeout works </li>
