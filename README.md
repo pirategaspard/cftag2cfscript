@@ -106,7 +106,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 
 <h4>Not Supported Tags</h4>
 <ul>
-<li>Everything else</li>
+<li>Everything else - (cftag2cfscript will make a "best guess" attempt when parsing an undefined tag)</li>
 </ul>
 
 
