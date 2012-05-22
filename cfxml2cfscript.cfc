@@ -93,6 +93,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cffile(doc);
 				break;
 			}
+			case "cfftp":
+			{
+				s &= parse_cfftp(doc);
+				break;
+			}
 			case "cffunction":
 			{
 				s &= parse_cffunction(doc);
@@ -345,6 +350,27 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		return s;
 	}
 	
+	function parse_cfftp(doc)
+	{
+		var f = getNewVariable();	
+		var s = ' var '&f&' = new ftp();';	
+		var i = 0;	
+		var keys = structkeyarray(doc.XmlAttributes);	
+		for(i=1;i < arraylen(keys); i++)
+		{
+			if ((comparenocase(keys[i],'action') != 0)&&(comparenocase(keys[i],'name') != 0))
+			{
+				s &= ' '&f&'.set'&keys[i]&'("'&doc.XmlAttributes[keys[i]]&'"); ';
+			}			
+		}
+		if (structKeyexists(doc.XmlAttributes,'name'))
+		{
+			s &= ' '&doc.XmlAttributes['name']&' = ';
+		}
+		s &= ' '&f&'.'&doc.XmlAttributes['action']&'(); ';
+		return s;
+	}
+	
 	function parse_cffunction(doc)
 	{
 		var s =' ';
@@ -422,7 +448,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				for(i=1;i<=arraylen(args);i++)
 				{
 					s &= args[i].name&'="'&args[i].value&'"';
-					if (i<arrayLen(args))
+					if (i < arrayLen(args))
 					{
 						s &= ','; 
 					}
@@ -435,7 +461,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				for(i=1;i<=arraylen(keys);i++)
 				{
 					s &= keys[i]&'="'&args[keys[i]]&'"';
-					if (i<arrayLen(keys))
+					if (i < arrayLen(keys))
 					{
 						s &= ','; 
 					}
@@ -456,7 +482,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		for(i=1;i<=arrayLen(keys);i++)
 		{
 			s &= keys[i]&'="'&doc.XmlAttributes[keys[i]]&'" '; 
-			if (i<arrayLen(keys))
+			if (i < arrayLen(keys))
 			{
 				//s &= ','; 
 			}
