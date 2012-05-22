@@ -74,6 +74,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfelse</li>
 <li>cfelseif</li>
 <li>cfftp</li>
+<li>cfhttp</li>
 <li>cfif</li>
 <li>cflock</li>
 <li>cflog</li>

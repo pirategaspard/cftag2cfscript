@@ -103,6 +103,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cffunction(doc);
 				break;
 			}
+			case "cfhttp":
+			{
+				s &= parse_cfhttp(doc);
+				break;
+			}
 			case "cfif":
 			{
 				s &= parse_cfif(doc);
@@ -208,21 +213,73 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	}
 	
 	
+	/* default functions */
 	
+	// attempt a best guess at how this cftag should be processed 
 	function parse_default(key,doc)
+	{
+		var s =' ';
+		var k = arguments.key;
+		if (comparenocase(left(k,2),'cf')==0)
+		{
+			// remove 'cf' from tag name
+			k = right(k,len(k)-2); 
+		}
+		// do we have a function or a service?
+		if (structKeyexists(doc.XmlAttributes,'action')||structKeyexists(doc.XmlAttributes,'result'))
+		{
+			s &= parse_default_ServiceWithAttributes(k,doc);
+		}
+		else
+		{
+			s &= parse_default_FunctionWithArguments(k,doc);
+		}
+		// do we have children?
+		if (arrayLen(doc.XmlChildren))
+		{
+			s &= '{';
+			s &= parseChildren(doc);
+			s &= '}';
+		}
+		return s;
+	}
+	
+	function parse_default_FunctionWithArguments(key,doc)
 	{
 		var keys = structKeyArray(doc.xmlAttributes);
 		var i = 1;
-		var s =' '&key;
+		var s = ' '&arguments.key;
 		if (arraylen(keys))
 		{
-			s =' (';
+			s &='(';
 			s &= buildAttributes(doc);
 			s &= ')';
+		}		
+		return s;
+	}
+	
+	function parse_default_ServiceWithAttributes(key,doc)
+	{
+		var ignoreKeyList = 'result,action';
+		var f = getNewVariable();	
+		var s = ' var '&f&' = new '&key&'();';	
+		var i = 0;	
+		var keys = structkeyarray(doc.XmlAttributes);	
+		for(i=1;i <= arraylen(keys); i++)
+		{
+			if (!listFindNoCase(ignoreKeyList,keys[i]))
+			{
+				s &= ' '&f&'.set'&keys[i]&'("'&doc.XmlAttributes[keys[i]]&'"); ';
+			}			
 		}
-		s &= '{';
-		s &= parseChildren(doc);
-		s &= '}';
+		if (structKeyexists(doc.XmlAttributes,'result'))
+		{
+			s &= ' '&doc.XmlAttributes['result']&' = ';
+		}
+		if (structKeyexists(doc.XmlAttributes,'action'))
+		{
+			s &= ' '&f&'.'&doc.XmlAttributes['action']&'(); ';
+		}
 		return s;
 	}
 	
@@ -235,7 +292,9 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	}
 	
 	*/
-	/* Cftag transformation functions */
+	
+	
+	/* specific cftag transformation functions */
 	function parse_cfabort(doc)
 	{
 		var s = ' abort;'; 
@@ -352,23 +411,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	
 	function parse_cfftp(doc)
 	{
-		var f = getNewVariable();	
-		var s = ' var '&f&' = new ftp();';	
-		var i = 0;	
-		var keys = structkeyarray(doc.XmlAttributes);	
-		for(i=1;i < arraylen(keys); i++)
-		{
-			if ((comparenocase(keys[i],'action') != 0)&&(comparenocase(keys[i],'name') != 0))
-			{
-				s &= ' '&f&'.set'&keys[i]&'("'&doc.XmlAttributes[keys[i]]&'"); ';
-			}			
-		}
-		if (structKeyexists(doc.XmlAttributes,'name'))
-		{
-			s &= ' '&doc.XmlAttributes['name']&' = ';
-		}
-		s &= ' '&f&'.'&doc.XmlAttributes['action']&'(); ';
-		return s;
+		return parse_default_ServiceWithAttributes('ftp',doc);
 	}
 	
 	function parse_cffunction(doc)
@@ -410,7 +453,12 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		s &= parseChildren(doc);
 		s &= '}';
 		return s;
-	}    
+	} 
+	
+	function parse_cfhttp(doc)
+	{
+		return parse_default_ServiceWithAttributes('http',doc);
+	}   
 	
 	function parse_cfif(doc)
 	{
