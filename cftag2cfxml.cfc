@@ -27,6 +27,7 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		xml = pre_parse_cfargument(xml);
 		xml = pre_parse_cfwddx(xml);	
 		xml = pre_parse_cfscript(xml);	
+		xml = pre_parse_cfqueryparam(xml);
 		xml = pre_parse_HTMLentities(xml); 
 		//writeOutput(xml);
 		return xml;	
@@ -112,6 +113,21 @@ component displayname="cftag2cfxml" hint="PART I" output="false"
 		str = rereplace(str,'<cfelseif\s*?('&variables.regexVar4&')\s*?>','<cfelseif><condition><![CDATA[\1]]></condition>','all');
 		str = pre_parse_cfelse(str);
 		str = pre_parse_cfelseif(str);
+		return str;
+	}
+	
+	private function pre_parse_cfqueryparam(str)
+	{
+		var i = 0;
+		var name = 'cfqueryparam ';
+		var pos = '';
+		var posinfo = REFindAllNoCase('<'&name,str,0);
+		/* add ":CFPARAM" next to the sql in all of our cfqueryparam tags, and add a corrosponding number to the cfqueryparam attributes */
+		for (i=arrayLen(posinfo.pos);i>0;i--)
+		{     			
+			str = insert(' num="'&i&'" ',str,posinfo.pos[i]+len(name));
+			str = insert(':CFPARAM'&i&' ',str,posinfo.pos[i]-1);			
+		}
 		return str;
 	}
 	

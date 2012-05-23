@@ -715,8 +715,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	function parse_cfquery(doc)
 	{
 		var s = '';
+		var i = '';
 		var sql = '';
+		var attr = '';
 		var q = getNewVariable();
+		var sql = getNewVariable();
 		s &= 'var '&q&' = new Query();'; 
 		if (structkeyExists(doc.XmlAttributes,'datasource'))
 		{
@@ -730,10 +733,22 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= q&'.setAttribute('&doc.XmlAttributes.name&'='&doc.XmlAttributes.name&');'; 
 			}
 		}
-		// should loop here to build cfqueryparam data
-		
-		sql = doc.xmlText;	
-		s &= q&'.setSQL("'&sql&'");'; 
+		//set SQL	
+		s &= sql&' = "'&doc.xmlText&'";';
+		s &= q&'.setSQL('&sql&');'; 					
+		// loop here to build cfqueryparam data
+		if (arrayLen(doc.XmlChildren))
+		{
+			/* loop over children and find cfqueryparams (all children should be cfqueryparams, but just in case lets check) */
+			for(i=1;i<=arrayLen(doc.XmlChildren);i++)
+			{
+				if (comparenocase(doc.XmlChildren[i].XmlName,'cfqueryparam') == 0)
+				{
+					/* remember that number we added to the cfqueryparam attributes in cftag2cfxml? we use it here to match up the params! */ 
+					s &= q&'.addParam(name="CFPARAM'&doc.XmlChildren[i].XmlAttributes.num&'", value="'&doc.XmlChildren[i].XmlAttributes.value&'", cfsqltype="'&doc.XmlChildren[i].XmlAttributes.cfsqltype&'");';
+				}
+			}		
+		}		
 		s &= doc.XmlAttributes.name&'='&q&'.Execute().getResult();'; 
 		return s;
 	}
