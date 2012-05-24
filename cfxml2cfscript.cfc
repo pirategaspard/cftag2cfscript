@@ -441,7 +441,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		}
 		for(i=1;i<=arrayLen(args);i++)
 		{
-			if (structkeyexists(args[i].XmlAttributes,'required') && args[i].XmlAttributes.required)
+			if ((structkeyexists(args[i].XmlAttributes,'required') && args[i].XmlAttributes.required)||structkeyexists(args[i].XmlAttributes,'default'))
 			{
 				s &= args[i].XmlAttributes.name;
 			}
