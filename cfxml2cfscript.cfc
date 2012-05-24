@@ -183,6 +183,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				s &= parse_cfthrow(doc);
 				break;
 			}
+			case "cfthread":
+			{
+				s &= parse_cfthread(doc);
+				break;
+			}
 			case "cftry":
 			{
 				s &= parse_cftry(doc);
@@ -224,20 +229,20 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	function parse_default(key,doc)
 	{
 		var s =' ';
-		var k = arguments.key;
+		var func_name = arguments.key;
 		if (comparenocase(left(k,2),'cf')==0)
 		{
 			// remove 'cf' from tag name
-			k = right(k,len(k)-2); 
+			func_name = right(func_name,len(func_name)-2); 
 		}
 		// do we have a function or a service?
 		if (structKeyexists(doc.XmlAttributes,'action')||structKeyexists(doc.XmlAttributes,'result'))
 		{
-			s &= parse_default_ServiceWithAttributes(k,doc);
+			s &= parse_default_ServiceWithAttributes(func_name,doc);
 		}
 		else
 		{
-			s &= parse_default_FunctionWithArguments(k,doc);
+			s &= parse_default_FunctionWithArguments(func_name,doc);
 		}
 		// do we have children?
 		if (arrayLen(doc.XmlChildren))
@@ -249,11 +254,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		return s;
 	}
 	
-	function parse_default_FunctionWithArguments(key,doc)
+	function parse_default_FunctionWithArguments(name,doc)
 	{
 		var keys = structKeyArray(doc.xmlAttributes);
 		var i = 1;
-		var s = ' '&arguments.key;
+		var s = ' '&arguments.name;
 		if (arraylen(keys))
 		{
 			s &='(';
@@ -263,11 +268,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		return s;
 	}
 	
-	function parse_default_ServiceWithAttributes(key,doc)
+	function parse_default_ServiceWithAttributes(name,doc)
 	{
 		var ignoreKeyList = 'result,action';
 		var f = getNewVariable();	
-		var s = ' var '&f&' = new '&key&'();';	
+		var s = ' var '&f&' = new '&name&'();';	
 		var i = 0;	
 		var keys = structkeyarray(doc.XmlAttributes);	
 		for(i=1;i <= arraylen(keys); i++)
@@ -285,6 +290,21 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		{
 			s &= ' '&f&'.'&doc.XmlAttributes['action']&'(); ';
 		}
+		return s;
+	}
+	
+	function default_FunctionWithOutsideAttributes(name,doc)
+	{
+		var s ='';
+		s &= ' '&name&' ';
+		akeys = structkeyarray(doc.XmlAttributes);
+		for(i=1;i<=arrayLen(akeys);i++)
+		{
+			s &= akeys[i]&'="'&doc.XmlAttributes[akeys[i]]&'" ';
+		}
+		s &= ' {';
+		s &= parseChildren(doc);
+		s &= '}';
 		return s;
 	}
 	
@@ -321,17 +341,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	
 	function parse_cfcomponent(doc)
 	{
-		var s ='';
-		s &= ' component ';
-		akeys = structkeyarray(doc.XmlAttributes);
-		for(i=1;i<=arrayLen(akeys);i++)
-		{
-			s &= akeys[i]&'="'&doc.XmlAttributes[akeys[i]]&'" ';
-		}
-		s &= ' {';
-		s &= parseChildren(doc);
-		s &= '}';
-		return s;
+		return default_FunctionWithOutsideAttributes('component',doc);
 	}
 	
 	function parse_cfdirectory(doc)
@@ -719,9 +729,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var sql = '';
 		var attr = '';
 		var q = getNewVariable();
+		var result = getNewVariable();
 		var sql = getNewVariable();
 		s &= 'var '&q&' = new Query();'; 
 		s &= 'var '&sql&' = "";';
+		s &= 'var '&result&' = {};';
 		if (structkeyExists(doc.XmlAttributes,'datasource'))
 		{
 			s &= q&'.setDataSource("'&doc.XmlAttributes.datasource&'");'; 
@@ -749,8 +761,18 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 					s &= q&'.addParam(name="CFPARAM'&doc.XmlChildren[i].XmlAttributes.num&'", value="'&doc.XmlChildren[i].XmlAttributes.value&'", cfsqltype="'&doc.XmlChildren[i].XmlAttributes.cfsqltype&'");';
 				}
 			}		
-		}		
-		s &= doc.XmlAttributes.name&'='&q&'.Execute().getResult();'; 
+		}
+		// do we need to get a results struct?	
+		if (structkeyExists(doc.XmlAttributes,'result'))
+		{
+			s &= result&'='&q&'.Execute();'; 
+			s &= doc.XmlAttributes.result&'='&result&'.getPrefix();'; 
+			s &= doc.XmlAttributes.name&'='&result&'.getResult();'; 
+		}
+		else
+		{	
+			s &= doc.XmlAttributes.name&'='&q&'.Execute().getResult();'; 
+		}
 		return s;
 	}
 	
@@ -832,6 +854,11 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			s &= '}';
 		}
 		return s;
+	}
+	
+	function parse_cfthread(doc)
+	{
+		return default_FunctionWithOutsideAttributes('thread',doc);
 	}
 	
 	function parse_cfthrow(doc)
