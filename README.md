@@ -59,8 +59,16 @@ Make sure to search your converted code for "cftag2cfscript". cftag2cfscript wil
 
 It may be that a tag in your code is not supported yet by cftag2cfscript and so it may give you XML errors. Check the list below to see what tags are supported. If its not there, or its there but implemented badly, submit a fix!
 
-<h3>Known Issues</h3>
+<h3>Other Issues</h3>
 cftag2cfscript is far from complete. You can help this project by contributing code and bug fixes. 
+<ul>
+<li>
+If you have code that generates XML cftag2cfscript will become incredibly confused.
+</li>
+<li>
+</li>
+</ul>
+
 
 <h4>Fully Supported Tags</h4>
 <ul>
