@@ -65,8 +65,6 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>
 If you have code that generates XML cftag2cfscript will become incredibly confused.
 </li>
-<li>
-</li>
 </ul>
 
 
