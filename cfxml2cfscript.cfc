@@ -432,6 +432,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 	function parse_cffunction(doc)
 	{
 		var s =' ';
+		var argCount = 0; // keeps track of how many arguments we have so we can decide to add a comma or not 
 		if (structkeyexists(doc.XmlAttributes,'access'))
 		{
 			s &= doc.XmlAttributes.access;
@@ -452,17 +453,18 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		for(i=1;i<=arrayLen(args);i++)
 		{
 			if ((structkeyexists(args[i].XmlAttributes,'required') && args[i].XmlAttributes.required)||structkeyexists(args[i].XmlAttributes,'default'))
-			{
+			{				
+				if (argCount > 0)
+				{
+					s &=',';
+				}
 				s &= args[i].XmlAttributes.name;
+				argCount++;
 			}
 			if (structkeyexists(args[i].XmlAttributes,'default'))
 			{
 				 s &= '="'&args[i].XmlAttributes.default&'"';
-			}
-			if (i < arrayLen(args))
-			{
-				s &=',';
-			}
+			}			
 		}
 		s &= ')'&'{';
 		s &= parseChildren(doc);
