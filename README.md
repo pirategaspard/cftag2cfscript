@@ -78,6 +78,8 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfif</li>
 <li>cflock</li>
 <li>cflog</li>
+<li>cfloop - cfloop:Query - looking for suggestions on how to make this better.</li>
+<li>cfquery</li>
 <li>cfreturn</li>
 <li>cfscript</li>
 <li>cfset</li>
@@ -94,14 +96,12 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cffile</li>
 <li>cffunction</li>
 <li>cfimage</li>
-<li>cfloop - cfloop:Query - looking for suggestions on how to make this better.</li>
 <li>cfinvoke - createObject works </li>
-<li>cfsetting - requesttimeout works </li>
 </ul>
 
 <h4>Barely Supported Tags</h4>
 <ul>
-<li>cfquery - cfquerparams do not work</li>
+<li>cfsetting - requesttimeout works </li>
 </ul>
 
 <h4>Not Supported Tags</h4>
