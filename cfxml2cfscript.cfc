@@ -418,6 +418,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			{				
 				s &=' fileCopy(';
 			}
+			/* TODO: file functions don't take named attributes. Thanks Adobe! */
 			s &= buildAttributes(doc,'action');
 			s &= ');';
 		}    
@@ -458,13 +459,17 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 				{
 					s &=',';
 				}
+				if (structkeyexists(args[i].XmlAttributes,'type'))
+				{
+					 s &= args[i].XmlAttributes.type&' ';
+				}
 				s &= args[i].XmlAttributes.name;
+				if (structkeyexists(args[i].XmlAttributes,'default'))
+				{
+					 s &= '="'&args[i].XmlAttributes.default&'"';
+				}
 				argCount++;
-			}
-			if (structkeyexists(args[i].XmlAttributes,'default'))
-			{
-				 s &= '="'&args[i].XmlAttributes.default&'"';
-			}			
+			}						
 		}
 		s &= ')'&'{';
 		s &= parseChildren(doc);
@@ -534,6 +539,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			{				
 				s &=' fileCopy(';
 			}
+			/* TODO: image functions don't take named attributes. Thanks Adobe! */
 			s &= buildAttributes(doc,'action');
 			s &= ');';
 		}    	
@@ -745,7 +751,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			s &= q&'.setDBtype("'&doc.XmlAttributes.dbtype&'");'; 
 			if (doc.XmlAttributes.dbtype == 'query')
 			{
-				s &= q&'.setAttribute('&doc.XmlAttributes.name&'='&doc.XmlAttributes.name&');'; 
+				s &= q&'.setAttributes('&doc.XmlAttributes.name&'='&doc.XmlAttributes.name&');'; 
 			}
 		}
 		//set SQL	
