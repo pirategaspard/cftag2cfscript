@@ -86,6 +86,7 @@ cftag2cfscript is far from complete. You can help this project by contributing c
 <li>cfswitch</li>
 <li>cfthrow</li>
 <li>cftry</li>
+<li>cfthread</li>
 <li>cfwddx</li>
 <li>cfzip</li>
 </ul>
