@@ -361,7 +361,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			}
 			case 'list':
 			{
-				s &= ' '&doc.XmlAttributes.name&' = directoryList("'&doc.XmlAttributes.directory&'");';
+				s &= ' '&doc.XmlAttributes.name&' = directoryList("'&doc.XmlAttributes.directory&'","no","query");';
 				break;
 			}
 			case 'rename':
@@ -751,6 +751,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			s &= q&'.setDBtype("'&doc.XmlAttributes.dbtype&'");'; 
 			if (doc.XmlAttributes.dbtype == 'query')
 			{
+				/* TODO: this is not correct. we should instead grab the table name after "FROM" inside the SQL string instead. */
 				s &= q&'.setAttributes('&doc.XmlAttributes.name&'='&doc.XmlAttributes.name&');'; 
 			}
 		}

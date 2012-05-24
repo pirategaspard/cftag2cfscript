@@ -94,7 +94,6 @@ If you have code that generates XML cftag2cfscript will become incredibly confus
 <li>cftry</li>
 <li>cfthread</li>
 <li>cfwddx</li>
-<li>cfzip</li>
 </ul>
 
 <h4>Mostly Supported Tags</h4>
@@ -113,6 +112,7 @@ If you have code that generates XML cftag2cfscript will become incredibly confus
 
 <h4>Not Supported Tags</h4>
 <ul>
+<li>cfzip - Will convert, but tag is not supported in script?</li>
 <li>Everything else - (cftag2cfscript will make a "best guess" attempt when parsing an undefined tag)</li>
 </ul>
 
