@@ -721,6 +721,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 		var q = getNewVariable();
 		var sql = getNewVariable();
 		s &= 'var '&q&' = new Query();'; 
+		s &= 'var '&sql&' = "";';
 		if (structkeyExists(doc.XmlAttributes,'datasource'))
 		{
 			s &= q&'.setDataSource("'&doc.XmlAttributes.datasource&'");'; 
