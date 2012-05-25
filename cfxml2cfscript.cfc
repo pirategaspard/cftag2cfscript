@@ -726,6 +726,7 @@ component displayname="cftag2cfxml" hint="PART 2" output="false"
 			s &= ' '&m&'.setTo("'&doc.XmlAttributes.to&'");';
 		}
 		s &= ' '&m&'.addPart( type="html", charset="utf-8", body="'&doc.XmlText&'" ); /* The body content is probably incorrect - cftag2cfscript */';
+		s &= ' '&m&'.send();';
 		return s;
 	}
 	
